@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.managementSystem.mapper.TaskAssignmentsMapper">
+  <resultMap id="BaseResultMap" type="com.example.managementSystem.entity.TaskAssignments">
+    <id column="assignment_id" jdbcType="INTEGER" property="assignmentId" />
+    <result column="appointor" jdbcType="INTEGER" property="appointor" />
+    <result column="receiver" jdbcType="INTEGER" property="receiver" />
+    <result column="task_id" jdbcType="INTEGER" property="taskId" />
+    <result column="sign_for_time" jdbcType="TIMESTAMP" property="signForTime" />
+    <result column="assignment_date" jdbcType="TIMESTAMP" property="assignmentDate" />
+    <result column="assignment_status" jdbcType="INTEGER" property="assignmentStatus" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    assignment_id, appointor, receiver, task_id, sign_for_time, assignment_date, assignment_status
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from task_assignments
+    where assignment_id = #{assignmentId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from task_assignments
+    where assignment_id = #{assignmentId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="assignment_id" keyProperty="assignmentId" parameterType="com.example.managementSystem.entity.TaskAssignments" useGeneratedKeys="true">
+    insert into task_assignments (appointor, receiver, task_id, 
+      sign_for_time, assignment_date, assignment_status
+      )
+    values (#{appointor,jdbcType=INTEGER}, #{receiver,jdbcType=INTEGER}, #{taskId,jdbcType=INTEGER}, 
+      #{signForTime,jdbcType=TIMESTAMP}, #{assignmentDate,jdbcType=TIMESTAMP}, #{assignmentStatus,jdbcType=INTEGER}
+      )
+  </insert>
+
+  <!-- 批量新增数据 -->
+  <insert id="insertBatch" keyColumn="assignment_id" keyProperty="assignmentId" useGeneratedKeys="true">
+    insert into task_assignments(appointor,receiver,task_id,assignment_date,sign_for_time,assignment_status)
+    values
+    <foreach collection="entities" item="entity" separator=",">
+      (#{entity.appointor},#{entity.receiver},#{entity.taskId},#{entity.assignmentDate},#{entity.signForTime},#{entity.assignmentStatus})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" keyColumn="assignment_id" keyProperty="assignmentId" parameterType="com.example.managementSystem.entity.TaskAssignments" useGeneratedKeys="true">
+    insert into task_assignments
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="appointor != null">
+        appointor,
+      </if>
+      <if test="receiver != null">
+        receiver,
+      </if>
+      <if test="taskId != null">
+        task_id,
+      </if>
+      <if test="signForTime != null">
+        sign_for_time,
+      </if>
+      <if test="assignmentDate != null">
+        assignment_date,
+      </if>
+      <if test="assignmentStatus != null">
+        assignment_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="appointor != null">
+        #{appointor,jdbcType=INTEGER},
+      </if>
+      <if test="receiver != null">
+        #{receiver,jdbcType=INTEGER},
+      </if>
+      <if test="taskId != null">
+        #{taskId,jdbcType=INTEGER},
+      </if>
+      <if test="signForTime != null">
+        #{signForTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="assignmentDate != null">
+        #{assignmentDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="assignmentStatus != null">
+        #{assignmentStatus,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.managementSystem.entity.TaskAssignments">
+    update task_assignments
+    <set>
+      <if test="appointor != null">
+        appointor = #{appointor,jdbcType=INTEGER},
+      </if>
+      <if test="receiver != null">
+        receiver = #{receiver,jdbcType=INTEGER},
+      </if>
+      <if test="taskId != null">
+        task_id = #{taskId,jdbcType=INTEGER},
+      </if>
+      <if test="signForTime != null">
+        sign_for_time = #{signForTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="assignmentDate != null">
+        assignment_date = #{assignmentDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="assignmentStatus != null">
+        assignment_status = #{assignmentStatus,jdbcType=INTEGER},
+      </if>
+    </set>
+    where assignment_id = #{assignmentId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.managementSystem.entity.TaskAssignments">
+    update task_assignments
+    set appointor = #{appointor,jdbcType=INTEGER},
+      receiver = #{receiver,jdbcType=INTEGER},
+      task_id = #{taskId,jdbcType=INTEGER},
+      sign_for_time = #{signForTime,jdbcType=TIMESTAMP},
+      assignment_date = #{assignmentDate,jdbcType=TIMESTAMP},
+      assignment_status = #{assignmentStatus,jdbcType=INTEGER}
+    where assignment_id = #{assignmentId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.managementSystem.mapper.AdmiMapper">
+  <resultMap id="BaseResultMap" type="com.example.managementSystem.entity.Admi">
+    <id column="admi_id" jdbcType="INTEGER" property="admiId" />
+    <result column="admi_email" jdbcType="VARCHAR" property="admiEmail" />
+    <result column="admi_tel" jdbcType="VARCHAR" property="admiTel" />
+    <result column="admi_pass" jdbcType="VARCHAR" property="admiPass" />
+    <result column="admi_name" jdbcType="VARCHAR" property="admiName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    admi_id, admi_email, admi_tel, admi_pass, admi_name
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from admi
+    where admi_id = #{admiId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from admi
+    where admi_id = #{admiId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="admi_id" keyProperty="admiId" parameterType="com.example.managementSystem.entity.Admi" useGeneratedKeys="true">
+    insert into admi (admi_email, admi_tel, admi_pass, 
+      admi_name)
+    values (#{admiEmail,jdbcType=VARCHAR}, #{admiTel,jdbcType=VARCHAR}, #{admiPass,jdbcType=VARCHAR}, 
+      #{admiName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="admi_id" keyProperty="admiId" parameterType="com.example.managementSystem.entity.Admi" useGeneratedKeys="true">
+    insert into admi
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="admiEmail != null">
+        admi_email,
+      </if>
+      <if test="admiTel != null">
+        admi_tel,
+      </if>
+      <if test="admiPass != null">
+        admi_pass,
+      </if>
+      <if test="admiName != null">
+        admi_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="admiEmail != null">
+        #{admiEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="admiTel != null">
+        #{admiTel,jdbcType=VARCHAR},
+      </if>
+      <if test="admiPass != null">
+        #{admiPass,jdbcType=VARCHAR},
+      </if>
+      <if test="admiName != null">
+        #{admiName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.managementSystem.entity.Admi">
+    update admi
+    <set>
+      <if test="admiEmail != null">
+        admi_email = #{admiEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="admiTel != null">
+        admi_tel = #{admiTel,jdbcType=VARCHAR},
+      </if>
+      <if test="admiPass != null">
+        admi_pass = #{admiPass,jdbcType=VARCHAR},
+      </if>
+      <if test="admiName != null">
+        admi_name = #{admiName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where admi_id = #{admiId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.managementSystem.entity.Admi">
+    update admi
+    set admi_email = #{admiEmail,jdbcType=VARCHAR},
+      admi_tel = #{admiTel,jdbcType=VARCHAR},
+      admi_pass = #{admiPass,jdbcType=VARCHAR},
+      admi_name = #{admiName,jdbcType=VARCHAR}
+    where admi_id = #{admiId,jdbcType=INTEGER}
+  </update>
+</mapper>

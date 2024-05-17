@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.managementSystem.mapper.AttendanceMapper">
+  <resultMap id="BaseResultMap" type="com.example.managementSystem.entity.Attendance">
+    <id column="record_id" jdbcType="INTEGER" property="recordId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="date" jdbcType="TIMESTAMP" property="date" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="province" jdbcType="VARCHAR" property="province" />
+    <result column="lng" jdbcType="DECIMAL" property="lng" />
+    <result column="lat" jdbcType="DECIMAL" property="lat" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    record_id, user_id, `date`, city, province, lng, lat
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from attendance
+    where record_id = #{recordId,jdbcType=INTEGER}
+  </select>
+
+  <!--通过用户Id获取所有记录-->
+  <select id="selectByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List"/>
+    from attendance
+    where user_id =#{userId,jdbcType=INTEGER}
+    order by date DESC
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from attendance
+    where record_id = #{recordId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="record_id" keyProperty="recordId" parameterType="com.example.managementSystem.entity.Attendance" useGeneratedKeys="true">
+    insert into attendance (user_id, `date`, city, 
+      province, lng, lat)
+    values (#{userId,jdbcType=INTEGER}, #{date,jdbcType=TIMESTAMP}, #{city,jdbcType=VARCHAR}, 
+      #{province,jdbcType=VARCHAR}, #{lng,jdbcType=DECIMAL}, #{lat,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" keyColumn="record_id" keyProperty="recordId" parameterType="com.example.managementSystem.entity.Attendance" useGeneratedKeys="true">
+    insert into attendance
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="date != null">
+        `date`,
+      </if>
+      <if test="city != null">
+        city,
+      </if>
+      <if test="province != null">
+        province,
+      </if>
+      <if test="lng != null">
+        lng,
+      </if>
+      <if test="lat != null">
+        lat,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="date != null">
+        #{date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="city != null">
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null">
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="lng != null">
+        #{lng,jdbcType=DECIMAL},
+      </if>
+      <if test="lat != null">
+        #{lat,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.managementSystem.entity.Attendance">
+    update attendance
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="date != null">
+        `date` = #{date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="city != null">
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null">
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="lng != null">
+        lng = #{lng,jdbcType=DECIMAL},
+      </if>
+      <if test="lat != null">
+        lat = #{lat,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where record_id = #{recordId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.managementSystem.entity.Attendance">
+    update attendance
+    set user_id = #{userId,jdbcType=INTEGER},
+      `date` = #{date,jdbcType=TIMESTAMP},
+      city = #{city,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      lng = #{lng,jdbcType=DECIMAL},
+      lat = #{lat,jdbcType=DECIMAL}
+    where record_id = #{recordId,jdbcType=INTEGER}
+  </update>
+</mapper>

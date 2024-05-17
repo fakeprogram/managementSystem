@@ -1,0 +1,21 @@
+html,body{
+    position: relative;
+    height: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    overflow: hidden;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+}
+
+#app{
+    position: relative;
+    display: block;
+    height: 100%;
+    align-items: center;
+}
+
+

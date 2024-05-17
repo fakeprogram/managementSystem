@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.managementSystem.mapper.JoinTeamMapper">
+  <resultMap id="BaseResultMap" type="com.example.managementSystem.entity.JoinTeam">
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="team_id" jdbcType="INTEGER" property="teamId" />
+    <result column="join_time" jdbcType="TIMESTAMP" property="joinTime" />
+  </resultMap>
+  <insert id="insert" parameterType="com.example.managementSystem.entity.JoinTeam">
+    insert into join_team (user_id, team_id, join_time
+      )
+    values (#{userId,jdbcType=INTEGER}, #{teamId,jdbcType=INTEGER}, #{joinTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.managementSystem.entity.JoinTeam">
+    insert into join_team
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="teamId != null">
+        team_id,
+      </if>
+      <if test="joinTime != null">
+        join_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="teamId != null">
+        #{teamId,jdbcType=INTEGER},
+      </if>
+      <if test="joinTime != null">
+        #{joinTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+</mapper>

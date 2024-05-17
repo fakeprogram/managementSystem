@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.managementSystem.mapper.TaskMapper">
+    <resultMap id="BaseResultMap" type="com.example.managementSystem.entity.Task">
+        <id column="task_id" jdbcType="INTEGER" property="taskId"/>
+        <result column="task_name" jdbcType="VARCHAR" property="taskName"/>
+        <result column="department_id" jdbcType="INTEGER" property="departmentId"/>
+        <result column="address_id" jdbcType="INTEGER" property="addressId"/>
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+        <result column="task_file" jdbcType="VARCHAR" property="taskFile"/>
+        <result column="task_progress" jdbcType="INTEGER" property="taskProgress"/>
+        <result column="task_type" jdbcType="VARCHAR" property="taskType"/>
+        <result column="task_status" jdbcType="INTEGER" property="taskStatus"/>
+    </resultMap>
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.example.managementSystem.entity.Task">
+        <result column="task_detail" jdbcType="LONGVARCHAR" property="taskDetail"/>
+    </resultMap>
+
+    <resultMap id="TaskWithAddressAndDepartment" type="com.example.managementSystem.entity.vo.TaskWithAddressAndDepartment">
+        <id column="task_id" jdbcType="INTEGER" property="taskId"/>
+        <result column="task_name" jdbcType="VARCHAR" property="taskName"/>
+        <result column="department_id" jdbcType="INTEGER" property="departmentId"/>
+        <result column="address_id" jdbcType="INTEGER" property="addressId"/>
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+        <result column="task_file" jdbcType="VARCHAR" property="taskFile"/>
+        <result column="task_progress" jdbcType="INTEGER" property="taskProgress"/>
+        <result column="task_type" jdbcType="VARCHAR" property="taskType"/>
+        <result column="task_status" jdbcType="INTEGER" property="taskStatus"/>
+        <result column="department_name" jdbcType="VARCHAR" property="departmentName"/>
+        <result column="address_name" jdbcType="VARCHAR" property="address_name" />
+        <result column="province" jdbcType="VARCHAR" property="province" />
+        <result column="city" jdbcType="VARCHAR" property="city" />
+        <result column="county" jdbcType="VARCHAR" property="county" />
+        <result column="street" jdbcType="VARCHAR" property="street" />
+        <result column="last_detail" jdbcType="VARCHAR" property="last_detail" />
+    </resultMap>
+    <resultMap extends="TaskWithAddressAndDepartment" id="TaskWithAddressAndDepartmentWithBLOBs" type="com.example.managementSystem.entity.vo.TaskWithAddressAndDepartment">
+        <result column="task_detail" jdbcType="LONGVARCHAR" property="taskDetail"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        task.task_id,task_name, task.department_id, task.address_id, start_time, end_time, task_file, task_progress,
+        task_type, task_status
+    </sql>
+
+    <sql id="Blob_Column_List">
+        task_detail
+    </sql>
+    <!--主键获取-->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from task
+        where task_id = #{taskId,jdbcType=INTEGER}
+    </select>
+
+    <!--部门ID获取历史任务（task_status==3）-->
+    <select id="getPastTaskByDepartmentId" parameterType="java.lang.Integer" resultMap="TaskWithAddressAndDepartmentWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        ,department.department_name,address.address_name,address.province,address.city,address.county,address.street,address.last_detail
+        from task left join department on task.department_id=department.department_id
+        left join address on task.address_id =address.address_id
+        where task.department_id = #{user_department_id,jdbcType=INTEGER} and `task_status` = 3
+    </select>
+
+    <!--通过用户id获取历史任务-->
+    <select id="getMyPastTask" parameterType="java.lang.Integer" resultMap="TaskWithAddressAndDepartmentWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        ,department.department_name,address.address_name,address.province,address.city,address.county,address.street,address.last_detail
+        from task left join department on task.department_id=department.department_id
+        left join address on task.address_id =address.address_id
+        left join task_assignments on task.task_id=task_assignments.task_id
+        where task_assignments.receiver=#{userId} and `task_status` = 3
+    </select>
+
+    <!--获取所有历史任务-->
+    <select id="getAllPastTask" parameterType="java.lang.Integer" resultMap="TaskWithAddressAndDepartmentWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        ,department.department_name ,address.address_name,address.province,address.city,address.county,address.street,address.last_detail
+        from task left join department on task.department_id=department.department_id
+        left join address on task.address_id =address.address_id
+        where `task_status` = 3
+    </select>
+
+    <!--部门ID获取正在进行任务（task_status==3）-->
+    <select id="getOnGoingTaskByDepartmentId" parameterType="java.lang.Integer" resultMap="TaskWithAddressAndDepartmentWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        ,department.department_name,address.address_name,address.province,address.city,address.county,address.street,address.last_detail
+        from task left join department on task.department_id=department.department_id
+        left join address on task.address_id =address.address_id
+        where task.department_id = #{user_department_id,jdbcType=INTEGER} and `task_status` = 2
+    </select>
+    <!--获取所有正在进行任务-->
+    <select id="getAllOnGoingTask" parameterType="java.lang.Integer" resultMap="TaskWithAddressAndDepartmentWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        ,department.department_name,address.address_name,address.province,address.city,address.county,address.street,address.last_detail
+        from task left join department on task.department_id=department.department_id
+        left join address on task.address_id =address.address_id
+        where `task_status` = 2
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from task
+    where task_id = #{taskId,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" keyColumn="task_id" keyProperty="taskId"
+            parameterType="com.example.managementSystem.entity.Task" useGeneratedKeys="true">
+    insert into task (task_name,department_id, address_id, start_time,
+      end_time, task_file, task_progress, 
+      task_type, task_status, task_detail
+      )
+    values (#{taskName,jdbcType=VARCHAR},#{departmentId,jdbcType=INTEGER}, #{addressId,jdbcType=INTEGER}, #{startTime,jdbcType=TIMESTAMP},
+      #{endTime,jdbcType=TIMESTAMP}, #{taskFile,jdbcType=VARCHAR}, #{taskProgress,jdbcType=INTEGER}, 
+      #{taskType,jdbcType=VARCHAR}, #{taskStatus,jdbcType=INTEGER}, #{taskDetail,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+    <insert id="insertSelective" keyColumn="task_id" keyProperty="taskId"
+            parameterType="com.example.managementSystem.entity.Task" useGeneratedKeys="true">
+        insert into task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="taskName != null">
+                task_name,
+            </if>
+            <if test="departmentId != null">
+                department_id,
+            </if>
+            <if test="addressId != null">
+                address_id,
+            </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
+            <if test="taskFile != null">
+                task_file,
+            </if>
+            <if test="taskProgress != null">
+                task_progress,
+            </if>
+            <if test="taskType != null">
+                task_type,
+            </if>
+            <if test="taskStatus != null">
+                task_status,
+            </if>
+            <if test="taskDetail != null">
+                task_detail,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="taskName != null">
+                #{taskName,jdbcType=VARCHAR},
+            </if>
+            <if test="departmentId != null">
+                #{departmentId,jdbcType=INTEGER},
+            </if>
+            <if test="addressId != null">
+                #{addressId,jdbcType=INTEGER},
+            </if>
+            <if test="startTime != null">
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="taskFile != null">
+                #{taskFile,jdbcType=VARCHAR},
+            </if>
+            <if test="taskProgress != null">
+                #{taskProgress,jdbcType=INTEGER},
+            </if>
+            <if test="taskType != null">
+                #{taskType,jdbcType=VARCHAR},
+            </if>
+            <if test="taskStatus != null">
+                #{taskStatus,jdbcType=INTEGER},
+            </if>
+            <if test="taskDetail != null">
+                #{taskDetail,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.example.managementSystem.entity.Task">
+        update task
+        <set>
+            <if test="taskName != null">
+                task_name=#{taskName,jdbcType=VARCHAR},
+            </if>
+            <if test="departmentId != null">
+                department_id = #{departmentId,jdbcType=INTEGER},
+            </if>
+            <if test="addressId != null">
+                address_id = #{addressId,jdbcType=INTEGER},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="taskFile != null">
+                task_file = #{taskFile,jdbcType=VARCHAR},
+            </if>
+            <if test="taskProgress != null">
+                task_progress = #{taskProgress,jdbcType=INTEGER},
+            </if>
+            <if test="taskType != null">
+                task_type = #{taskType,jdbcType=VARCHAR},
+            </if>
+            <if test="taskStatus != null">
+                task_status = #{taskStatus,jdbcType=INTEGER},
+            </if>
+            <if test="taskDetail != null">
+                task_detail = #{taskDetail,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where task_id = #{taskId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.example.managementSystem.entity.Task">
+    update task
+    set task_name=#{taskName,jdbcType=VARCHAR},
+      department_id = #{departmentId,jdbcType=INTEGER},
+      address_id = #{addressId,jdbcType=INTEGER},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      task_file = #{taskFile,jdbcType=VARCHAR},
+      task_progress = #{taskProgress,jdbcType=INTEGER},
+      task_type = #{taskType,jdbcType=VARCHAR},
+      task_status = #{taskStatus,jdbcType=INTEGER},
+      task_detail = #{taskDetail,jdbcType=LONGVARCHAR}
+    where task_id = #{taskId,jdbcType=INTEGER}
+  </update>
+    <update id="updateByPrimaryKey" parameterType="com.example.managementSystem.entity.Task">
+    update task
+    set task_name=#{taskName,jdbcType=VARCHAR},
+      department_id = #{departmentId,jdbcType=INTEGER},
+      address_id = #{addressId,jdbcType=INTEGER},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      task_file = #{taskFile,jdbcType=VARCHAR},
+      task_progress = #{taskProgress,jdbcType=INTEGER},
+      task_type = #{taskType,jdbcType=VARCHAR},
+      task_status = #{taskStatus,jdbcType=INTEGER}
+    where task_id = #{taskId,jdbcType=INTEGER}
+  </update>
+</mapper>
