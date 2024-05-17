@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.managementSystem.mapper.ReleaseTaskMapper">
+  <resultMap id="BaseResultMap" type="com.example.managementSystem.entity.ReleaseTask">
+    <id column="release_id" jdbcType="INTEGER" property="releaseId" />
+    <result column="task_id" jdbcType="INTEGER" property="taskId" />
+    <result column="publisher" jdbcType="INTEGER" property="publisher" />
+    <result column="release_time" jdbcType="TIMESTAMP" property="releaseTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    release_id, task_id, publisher, release_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from release_task
+    where release_id = #{releaseId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from release_task
+    where release_id = #{releaseId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="release_id" keyProperty="releaseId" parameterType="com.example.managementSystem.entity.ReleaseTask" useGeneratedKeys="true">
+    insert into release_task (task_id, publisher, release_time
+      )
+    values (#{taskId,jdbcType=INTEGER}, #{publisher,jdbcType=INTEGER}, #{releaseTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="release_id" keyProperty="releaseId" parameterType="com.example.managementSystem.entity.ReleaseTask" useGeneratedKeys="true">
+    insert into release_task
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="taskId != null">
+        task_id,
+      </if>
+      <if test="publisher != null">
+        publisher,
+      </if>
+      <if test="releaseTime != null">
+        release_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="taskId != null">
+        #{taskId,jdbcType=INTEGER},
+      </if>
+      <if test="publisher != null">
+        #{publisher,jdbcType=INTEGER},
+      </if>
+      <if test="releaseTime != null">
+        #{releaseTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.managementSystem.entity.ReleaseTask">
+    update release_task
+    <set>
+      <if test="taskId != null">
+        task_id = #{taskId,jdbcType=INTEGER},
+      </if>
+      <if test="publisher != null">
+        publisher = #{publisher,jdbcType=INTEGER},
+      </if>
+      <if test="releaseTime != null">
+        release_time = #{releaseTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where release_id = #{releaseId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.managementSystem.entity.ReleaseTask">
+    update release_task
+    set task_id = #{taskId,jdbcType=INTEGER},
+      publisher = #{publisher,jdbcType=INTEGER},
+      release_time = #{releaseTime,jdbcType=TIMESTAMP}
+    where release_id = #{releaseId,jdbcType=INTEGER}
+  </update>
+</mapper>

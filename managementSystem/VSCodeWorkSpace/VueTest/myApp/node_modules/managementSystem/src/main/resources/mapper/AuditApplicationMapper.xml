@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.managementSystem.mapper.AuditApplicationMapper">
+  <resultMap id="BaseResultMap" type="com.example.managementSystem.entity.AuditApplication">
+    <result column="apply_id" jdbcType="INTEGER" property="applyId" />
+    <result column="auditor" jdbcType="INTEGER" property="auditor" />
+    <result column="opinions" jdbcType="VARCHAR" property="opinions" />
+    <result column="audit_time" jdbcType="TIMESTAMP" property="auditTime" />
+    <result column="is_pass" jdbcType="INTEGER" property="isPass" />
+  </resultMap>
+
+  <!--已经审核过了-->
+  <select id="countByApplyId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select count(*) as num from audit_application where audit_application.apply_id=#{applyId}
+  </select>
+  <insert id="insert" parameterType="com.example.managementSystem.entity.AuditApplication">
+    insert into audit_application (apply_id, auditor, opinions, 
+      audit_time, is_pass)
+    values (#{applyId,jdbcType=INTEGER}, #{auditor,jdbcType=INTEGER}, #{opinions,jdbcType=VARCHAR}, 
+      #{auditTime,jdbcType=TIMESTAMP}, #{isPass,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.managementSystem.entity.AuditApplication">
+    insert into audit_application
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="applyId != null">
+        apply_id,
+      </if>
+      <if test="auditor != null">
+        auditor,
+      </if>
+      <if test="opinions != null">
+        opinions,
+      </if>
+      <if test="auditTime != null">
+        audit_time,
+      </if>
+      <if test="isPass != null">
+        is_pass,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="applyId != null">
+        #{applyId,jdbcType=INTEGER},
+      </if>
+      <if test="auditor != null">
+        #{auditor,jdbcType=INTEGER},
+      </if>
+      <if test="opinions != null">
+        #{opinions,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null">
+        #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isPass != null">
+        #{isPass,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

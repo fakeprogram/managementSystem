@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.managementSystem.mapper.DepartmentMapper">
+  <resultMap id="BaseResultMap" type="com.example.managementSystem.entity.Department">
+    <id column="department_id" jdbcType="INTEGER" property="departmentId" />
+    <result column="department_head" jdbcType="INTEGER" property="departmentHead" />
+    <result column="department_name" jdbcType="VARCHAR" property="departmentName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    department_id, department_head, department_name
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from department
+    where department_id = #{departmentId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from department
+    where department_id = #{departmentId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="department_id" keyProperty="departmentId" parameterType="com.example.managementSystem.entity.Department" useGeneratedKeys="true">
+    insert into department (department_head, department_name)
+    values (#{departmentHead,jdbcType=INTEGER}, #{departmentName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="department_id" keyProperty="departmentId" parameterType="com.example.managementSystem.entity.Department" useGeneratedKeys="true">
+    insert into department
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="departmentHead != null">
+        department_head,
+      </if>
+      <if test="departmentName != null">
+        department_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="departmentHead != null">
+        #{departmentHead,jdbcType=INTEGER},
+      </if>
+      <if test="departmentName != null">
+        #{departmentName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.managementSystem.entity.Department">
+    update department
+    <set>
+      <if test="departmentHead != null">
+        department_head = #{departmentHead,jdbcType=INTEGER},
+      </if>
+      <if test="departmentName != null">
+        department_name = #{departmentName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where department_id = #{departmentId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.managementSystem.entity.Department">
+    update department
+    set department_head = #{departmentHead,jdbcType=INTEGER},
+      department_name = #{departmentName,jdbcType=VARCHAR}
+    where department_id = #{departmentId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.managementSystem.mapper.TaskReportMapper">
+  <resultMap id="BaseResultMap" type="com.example.managementSystem.entity.TaskReport">
+    <id column="report_id" jdbcType="INTEGER" property="reportId" />
+    <result column="task_id" jdbcType="INTEGER" property="taskId" />
+    <result column="repoter" jdbcType="INTEGER" property="repoter" />
+    <result column="task_progress" jdbcType="INTEGER" property="taskprogress" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="report_time" jdbcType="TIMESTAMP" property="reportTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    report_id, task_id, repoter, task_progress, content, report_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from task_report
+    where report_id = #{reportId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from task_report
+    where report_id = #{reportId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="report_id" keyProperty="reportId" parameterType="com.example.managementSystem.entity.TaskReport" useGeneratedKeys="true">
+    insert into task_report (task_id, repoter, task_progress,
+      content, report_time)
+    values (#{taskId,jdbcType=INTEGER}, #{repoter,jdbcType=INTEGER}, #{taskprogress,jdbcType=INTEGER}, 
+      #{content,jdbcType=VARCHAR}, #{reportTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" keyColumn="report_id" keyProperty="reportId" parameterType="com.example.managementSystem.entity.TaskReport" useGeneratedKeys="true">
+    insert into task_report
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="taskId != null">
+        task_id,
+      </if>
+      <if test="repoter != null">
+        repoter,
+      </if>
+      <if test="taskprogress != null">
+        task_progress,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="reportTime != null">
+        report_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="taskId != null">
+        #{taskId,jdbcType=INTEGER},
+      </if>
+      <if test="repoter != null">
+        #{repoter,jdbcType=INTEGER},
+      </if>
+      <if test="taskprogress != null">
+        #{taskprogress,jdbcType=INTEGER},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="reportTime != null">
+        #{reportTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.managementSystem.entity.TaskReport">
+    update task_report
+    <set>
+      <if test="taskId != null">
+        task_id = #{taskId,jdbcType=INTEGER},
+      </if>
+      <if test="repoter != null">
+        repoter = #{repoter,jdbcType=INTEGER},
+      </if>
+      <if test="taskprogress != null">
+        task_progress = #{taskprogress,jdbcType=INTEGER},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="reportTime != null">
+        report_time = #{reportTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where report_id = #{reportId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.managementSystem.entity.TaskReport">
+    update task_report
+    set task_id = #{taskId,jdbcType=INTEGER},
+      repoter = #{repoter,jdbcType=INTEGER},
+      task_progress = #{taskprogress,jdbcType=INTEGER},
+      content = #{content,jdbcType=VARCHAR},
+      report_time = #{reportTime,jdbcType=TIMESTAMP}
+    where report_id = #{reportId,jdbcType=INTEGER}
+  </update>
+</mapper>

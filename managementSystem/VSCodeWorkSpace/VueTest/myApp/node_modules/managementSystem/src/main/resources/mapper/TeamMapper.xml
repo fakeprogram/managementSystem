@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.managementSystem.mapper.TeamMapper">
+  <resultMap id="BaseResultMap" type="com.example.managementSystem.entity.Team">
+    <id column="team_id" jdbcType="INTEGER" property="teamId" />
+    <result column="team_head" jdbcType="INTEGER" property="teamHead" />
+    <result column="team_name" jdbcType="VARCHAR" property="teamName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    team_id, team_head, team_name
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from team
+    where team_id = #{teamId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from team
+    where team_id = #{teamId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="team_id" keyProperty="teamId" parameterType="com.example.managementSystem.entity.Team" useGeneratedKeys="true">
+    insert into team (team_head, team_name)
+    values (#{teamHead,jdbcType=INTEGER}, #{teamName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="team_id" keyProperty="teamId" parameterType="com.example.managementSystem.entity.Team" useGeneratedKeys="true">
+    insert into team
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="teamHead != null">
+        team_head,
+      </if>
+      <if test="teamName != null">
+        team_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="teamHead != null">
+        #{teamHead,jdbcType=INTEGER},
+      </if>
+      <if test="teamName != null">
+        #{teamName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.managementSystem.entity.Team">
+    update team
+    <set>
+      <if test="teamHead != null">
+        team_head = #{teamHead,jdbcType=INTEGER},
+      </if>
+      <if test="teamName != null">
+        team_name = #{teamName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where team_id = #{teamId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.managementSystem.entity.Team">
+    update team
+    set team_head = #{teamHead,jdbcType=INTEGER},
+      team_name = #{teamName,jdbcType=VARCHAR}
+    where team_id = #{teamId,jdbcType=INTEGER}
+  </update>
+</mapper>
